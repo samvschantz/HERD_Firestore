@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
@@ -57,12 +58,10 @@ function SignUpFormBase(props) {
         props.firebase
             .doCreateUserWithEmailAndPassword(email, passwordOne)
                 .then(authUser => {
-                    console.log('authUser');
-                    console.log(authUser);
                     props.history.push(ROUTES.HOME);
                 })
-                .catch(error => {
-                    setError({ error });
+                .catch(err => {
+                    setError(err);
                 })
     }
 
