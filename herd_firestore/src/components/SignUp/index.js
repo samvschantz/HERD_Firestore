@@ -24,12 +24,31 @@ function SignUpForm(props) {
     const [passwordTwo, setPasswordTwo] = useState('');
     const [error, setError] = useState(null);
 
-    const isInvalid =
+    const isInvalidPwd =
       passwordOne !== passwordTwo ||
-      passwordOne === '' ||
-      email === '' ||
-      username === '';
+      passwordOne === '';
+
+    const isEmptyUsr = username === '';
+
+    const isEmptyEmail = email === '';
+
+    const isInvalid = isInvalidPwd || isEmptyEmail || isEmptyUsr;
     
+    const onBlur = (e) => {
+        switch(e.target.name){
+            case 'username':
+                isEmptyUsr ? setError({message: 'Username required'}):setError(null);
+                break;
+            case 'passwordTwo':
+                isInvalidPwd ? setError({message: 'Passwords must match'}):setError(null);
+                break;
+            case 'email':
+                isEmptyEmail ? setError({message: 'Email required'}):setError(null);
+                break;
+        }
+
+    }
+
     const onSubmit = (e) => {
         console.log(e)
     }
@@ -60,6 +79,7 @@ function SignUpForm(props) {
             name="username"
             value={username}
             onChange={(e) => onChange(e)}
+            onBlur={(e) => onBlur(e)}
             type="text"
             placeholder="Full Name"
             />
@@ -67,6 +87,7 @@ function SignUpForm(props) {
             name="email"
             value={email}
             onChange={(e) => onChange(e)}
+            onBlur={(e) => onBlur(e)}
             type="text"
             placeholder="Email Address"
             />
@@ -74,6 +95,7 @@ function SignUpForm(props) {
             name="passwordOne"
             value={passwordOne}
             onChange={(e) => onChange(e)}
+            onBlur={(e) => onBlur(e)}
             type="password"
             placeholder="Password"
             />
@@ -81,6 +103,7 @@ function SignUpForm(props) {
             name="passwordTwo"
             value={passwordTwo}
             onChange={(e) => onChange(e)}
+            onBlur={(e) => onBlur(e)}
             type="password"
             placeholder="Confirm Password"
             />
