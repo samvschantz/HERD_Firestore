@@ -38,7 +38,7 @@ function SignInFormBase(props) {
     }
     
     const onSubmit = (e) => {
-        props.withFirebase
+        props.firebase
             .doSignInWithEmailAndPassword(email, password)
             .then(() => {
                 props.history.push(ROUTES.HOME);
