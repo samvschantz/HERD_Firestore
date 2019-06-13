@@ -20,11 +20,15 @@ function App(props) {
   const [appAuthUser, setAuthUser] = useState(null);
 
   useEffect(() => {
-    props.firebase.auth.onAuthStateChanged(authUser => {
+    let listener = props.firebase.auth.onAuthStateChanged(authUser => {
       authUser
         ? setAuthUser(authUser)
         : setAuthUser(null);
     })
+
+    return () => {
+      listener()
+    }
   })
 
   return(
