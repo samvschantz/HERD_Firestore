@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
+import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
 const SignUpPage = () => (
@@ -16,7 +17,9 @@ const SignUpLink = () => (
     </p>
 )
 
-function SignUpForm(props) {
+const SignUpForm = withRouter(withFirebase(SignUpFormBase));
+
+function SignUpFormBase(props) {
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -42,7 +45,7 @@ function SignUpForm(props) {
             case 'passwordTwo':
                 isInvalidPwd ? setError({message: 'Passwords must match'}):setError(null);
                 break;
-            case 'email':
+            default:
                 isEmptyEmail ? setError({message: 'Email required'}):setError(null);
                 break;
         }
@@ -50,7 +53,17 @@ function SignUpForm(props) {
     }
 
     const onSubmit = (e) => {
-        console.log(e)
+        e.preventDefault();
+        props.firebase
+            .doCreateUserWithEmailAndPassword(email, passwordOne)
+                .then(authUser => {
+                    console.log('authUser');
+                    console.log(authUser);
+                    props.history.push(ROUTES.HOME);
+                })
+                .catch(error => {
+                    setError({ error });
+                })
     }
 
     const onChange = (e) => {
@@ -67,7 +80,7 @@ function SignUpForm(props) {
             case 'passwordTwo':
                 setPasswordTwo(e.target.value)
                 break;
-            case 'error':
+            default:
                 setError(e.target.value)
                 break;
         }
